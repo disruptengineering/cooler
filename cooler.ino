@@ -1,37 +1,81 @@
+
+// Include the libraries we need
+#include <OneWire.h>
+#include <DallasTemperature.h>
+
+// Data wire is plugged into port 2 on the Arduino
+#define ONE_WIRE_BUS 3
+
+// Setup a oneWire instance to communicate with any OneWire devices (not just Maxim/Dallas temperature ICs)
+OneWire oneWire(ONE_WIRE_BUS);
+
+// Pass our oneWire reference to Dallas Temperature. 
+DallasTemperature sensors(&oneWire);
+
+float Celsius = 0;
+float Fahrenheit = 0;
+
 /*
-  Blink
-
-  Turns an LED on for one second, then off for one second, repeatedly.
-
-  Most Arduinos have an on-board LED you can control. On the UNO, MEGA and ZERO
-  it is attached to digital pin 13, on MKR1000 on pin 6. LED_BUILTIN is set to
-  the correct LED pin independent of which board is used.
-  If you want to know what pin the on-board LED is connected to on your Arduino
-  model, check the Technical Specs of your board at:
-  https://www.arduino.cc/en/Main/Products
-
-  modified 8 May 2014
-  by Scott Fitzgerald
-  modified 2 Sep 2016
-  by Arturo Guadalupi
-  modified 8 Sep 2016
-  by Colby Newman
-
-  This example code is in the public domain.
-
-  http://www.arduino.cc/en/Tutorial/Blink
+int x = 1;
+int ButtonState = 0;
+int OldButtonState = LOW;
+int NewButtonState = digitalRead(Switch_pin);
 */
 
-// the setup function runs once when you press reset or power the board
+int Switch_pin = 5;
+int LED_pin = 22;
+int Relay_pin = 23;
+int val = 0;
+int val2 = 0;
+
+
+
 void setup() {
-  // initialize digital pin LED_BUILTIN as an output.
-  pinMode(LED_BUILTIN, OUTPUT);
+  sensors.begin();
+  Serial.begin (115200);
+  
+  pinMode(Switch_pin,INPUT_PULLDOWN);
+  pinMode(Relay_pin,OUTPUT);
+  digitalWrite(Relay_pin,LOW);
+  digitalWrite(LED_pin, LOW);
 }
 
-// the loop function runs over and over again forever
 void loop() {
-  digitalWrite(LED_BUILTIN, HIGH);   // turn the LED on (HIGH is the voltage level)
-  delay(1000);                       // wait for a second
-  digitalWrite(LED_BUILTIN, LOW);    // turn the LED off by making the voltage LOW
-  delay(1000);                       // wait for a second
+  sensors.requestTemperatures();
+  Celsius = sensors.getTempCByIndex(0);
+  Fahrenheit = sensors.toFahrenheit(Celsius);
+
+val = digitalRead(Switch_pin);
+val2 = digitalRead(Relay_pin);
+
+Serial.print("Switch State: ");
+Serial.print(val); 
+Serial.println();
+
+delay (1000);
+
+
+if (val == 1){
+digitalWrite(Relay_pin,HIGH);
+digitalWrite(LED_pin,HIGH);
+ val2 = digitalRead(Relay_pin);
+Serial.print("Relay State: ");
+Serial.print(val2); 
+Serial.println();
+}
+
+
+else {
+  digitalWrite(Relay_pin,LOW);
+  digitalWrite(LED_pin,LOW);
+ Serial.print("Relay State: ");
+Serial.print(val2); 
+Serial.println();
+}
+  Serial.print(Celsius);
+  Serial.print(" C ");
+  Serial.println();
+  Serial.print(Fahrenheit);
+  Serial.print(" F ");
+  Serial.println();
 }
