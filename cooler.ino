@@ -66,7 +66,7 @@ void loop() {
       //Turn cooler & LED off
       digitalWrite(Relay_pin,LOW);
       digitalWrite(LED_pin,LOW);
-      coolerOff = false;
+      coolerOn = false;
     }
 
     relayVal = digitalRead(Relay_pin);
