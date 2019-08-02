@@ -34,40 +34,43 @@ void setup() {
 
 void loop() {
   sensors.requestTemperatures();
+
   Celsius = sensors.getTempCByIndex(0);
   Fahrenheit = sensors.toFahrenheit(Celsius);
-
   switchVal = digitalRead(Switch_pin);
   relayVal = digitalRead(Relay_pin);
 
   Serial.print("Switch State: ");
   Serial.print(switchVal); 
+  Serial.print(" / Relay State: ");
+  Serial.print(relayVal); 
+
   Serial.println();
-  
-  delay (1000);
+  Serial.print(Fahrenheit);
+  Serial.print("F ");
+  Serial.print(Celsius);
+  Serial.print("C / ");
+
+  Serial.println();
+
+  delay (250);
 
 
   if (switchVal == 1){
-    digitalWrite(Relay_pin,HIGH);
-    digitalWrite(LED_pin,HIGH);
+    if (coolerOn == false){
+      //Turn cooler & LED on
+      digitalWrite(Relay_pin,HIGH);
+      digitalWrite(LED_pin,HIGH);
+      coolerOn = true;
+    } else {
+      //Turn cooler & LED off
+      digitalWrite(Relay_pin,LOW);
+      digitalWrite(LED_pin,LOW);
+      coolerOff = false;
+    }
+
     relayVal = digitalRead(Relay_pin);
-    Serial.print("Relay State: ");
-    Serial.print(relayVal); 
-    Serial.println();
   }
   
   
-  else {
-    digitalWrite(Relay_pin,LOW);
-    digitalWrite(LED_pin,LOW);
-    Serial.print("Relay State: ");
-    Serial.print(relayVal); 
-    Serial.println();
-  }
-  Serial.print(Celsius);
-  Serial.print(" C ");
-  Serial.println();
-  Serial.print(Fahrenheit);
-  Serial.print(" F ");
-  Serial.println();
 }
