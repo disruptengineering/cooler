@@ -88,7 +88,7 @@ void loop() {
     char temp[8];
     char ble_current[8];
     char ble_level[8];
-    dtostrf(Celsius, 1, 2, temp);
+    dtostrf(Fahrenheit, 1, 2, temp);
     tempCharacteristic->setValue(temp);  
   }
 
